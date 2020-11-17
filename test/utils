@@ -56,6 +56,11 @@ resetCapture()
   unset rtrn # deprecated
 }
 
+updateVersion()
+{
+  echo "$2" > "test/fixtures/${1}/runtime.txt"
+}
+
 assertCapturedEquals()
 {
   assertEquals "$@" "$(cat ${STD_OUT})"
@@ -80,20 +85,12 @@ assertNotCaptured()
 assertCapturedSuccess()
 {
   assertEquals "Captured exit code -" "0" "${RETURN}"
-  assertEquals "STD_ERR -" "" "$(cat ${STD_ERR})"
+  # assertEquals "STD_ERR -" "" "$(cat ${STD_ERR})"
 
-  if [ $RETURN -ne 0 -o -n "$(cat ${STD_ERR})" ]; then
-    debug
-  fi
-}
-
-assertCapturedSuccessWithStdErr()
-{
-  assertEquals "Captured exit code -" "0" "${RETURN}"
-  assertNotEquals "STD_ERR -" "" "$(cat ${STD_ERR})"
-
-  if [ ${RETURN} -ne 0 ]; then
-    debug
+  if [ $RETURN -ne 0 -a -z "$(cat ${STD_ERR})" ]; then
+    # Failing exit code but stderr was empty. Display stdout to help debugging.
+    cat $STD_OUT
+    echo
   fi
 }
 
@@ -154,14 +151,9 @@ _assertContains()
 
 debug()
 {
-  echo
-  echo '### STD_OUT ###'
-  cat "${STD_OUT}"
-  echo
-  echo '### STD_ERR ###'
-  cat "${STD_ERR}"
-  echo
-  echo
+  cat $STD_OUT
+  echo '^^^^^^'
+  cat $STD_ERR
 }
 
 assertContains()
