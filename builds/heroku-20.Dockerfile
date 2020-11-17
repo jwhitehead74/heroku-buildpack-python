@@ -10,9 +10,6 @@ RUN apt-get update \
         libsqlite3-dev \
         python3-pip \
         python3-setuptools \
-        xvfb \
-        libfontconfig \
-        wkhtmltopdf \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
