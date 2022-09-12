@@ -12,7 +12,7 @@ RUN apt-get update \
         python3-setuptools \
         xvfb \
         libfontconfig \
-        wkhtmltopdf \        
+        wkhtmltopdf \    
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
